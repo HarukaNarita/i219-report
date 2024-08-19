@@ -1,0 +1,43 @@
+@startuml sequence
+participant "Main"
+participant ":ReagentDatabase"
+participant "reagent1:RawMaterial"
+participant "reagent2:RawMaterial"
+participant "reagent3:RawMaterial"
+participant "reagent4:RawMaterial"
+
+activate "Main"
+"Main" -> "reagent1:RawMaterial" ** : reagent1 = new RawMaterial("500 mM magnesium chloride", 30)
+"reagent1:RawMaterial" -> "reagent1:RawMaterial" : init
+activate "reagent1:RawMaterial"
+deactivate "reagent1:RawMaterial"
+
+"Main" -> "reagent2:RawMaterial" ** : reagent2 = new RawMaterial("100 mM sodium chloride", 50);
+"reagent2:RawMaterial" -> "reagent2:RawMaterial" : init
+activate "reagent2:RawMaterial"
+deactivate "reagent2:RawMaterial"
+
+"Main" -> "reagent3:RawMaterial" ** : reagent3 = new RawMaterial("phosphate buffer", 100);
+"reagent3:RawMaterial" -> "reagent3:RawMaterial" : init
+activate "reagent3:RawMaterial"
+deactivate "reagent3:RawMaterial"
+
+"Main" -> "reagent4:RawMaterial" ** : reagent4 = new RawMaterial("double distilled water", 200);
+"reagent4:RawMaterial" -> "reagent4:RawMaterial" : init
+activate "reagent4:RawMaterial"
+deactivate "reagent4:RawMaterial"
+
+"Main" -> ":ReagentDatabase" : addComponent(reagent1)
+activate ":ReagentDatabase"
+deactivate ":ReagentDatabase"
+"Main" -> ":ReagentDatabase" : addComponent(reagent2)
+activate ":ReagentDatabase"
+deactivate ":ReagentDatabase"
+"Main" -> ":ReagentDatabase" : addComponent(reagent3)
+activate ":ReagentDatabase"
+deactivate ":ReagentDatabase"
+"Main" -> ":ReagentDatabase" : addComponent(reagent4)
+activate ":ReagentDatabase"
+deactivate ":ReagentDatabase"
+@enduml
+

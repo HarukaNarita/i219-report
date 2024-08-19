@@ -1,0 +1,80 @@
+@startuml autodisepnsersystem
+class AutoDispenserSystem{
+    - List containerList
+    - Dispenser dispenser
+    - RobotArm robotArm
+    - ReagentDatabase reagentDatabase
+    - Scanner scanner
+    
+    + void createNewReagent()
+    + void startEventListener()  
+}
+
+class Dispenser {
+    - {static} int  pMin
+    - {static} int pMax
+    - enum workingState
+    - enum currentState
+    - enum pDirection
+    - int pTmp
+    - int pFinal
+    + void aspirate()
+    + void dispense()
+    + void stop()
+    + void resume()
+}
+
+class RobotArm {
+    - enum currentState
+    - int position
+    - int destination
+    + void move()
+    + void stop()
+    + void resume()
+}
+
+AutoDispenserSystem "1" o-d- "1" Dispenser
+AutoDispenserSystem "1" o-d- "1" RobotArm
+AutoDispenserSystem "1" o-d- "1" ReagentDatabase
+AutoDispenserSystem "1" o-d- "3" Container
+
+class ReagentDatabase {
+    + List<ReagentComponent> reagentList
+    + ReagentComponent getComponent() 
+    + void addComponent()
+    + void removeComponent()
+    + void printAllComponents()
+}
+
+
+abstract class ReagentComponent {
+    + String name
+    + int volume
+    + List itemList
+}
+
+class RawMaterial {
+
+}
+
+class Reagent{
+
+}
+
+ReagentDatabase o-d- ReagentComponent 
+ReagentComponent <|-d- RawMaterial
+ReagentComponent <|-d- Reagent
+ReagentComponent o-d- Reagent
+
+class Container {
+    + int id
+    + int position
+    + ReagentComponent content
+    + enum containerState
+    + void clear()
+}
+
+Dispenser -d- Container : > handle
+Container "1" o-r- "1" ReagentComponent : < set
+
+@enduml

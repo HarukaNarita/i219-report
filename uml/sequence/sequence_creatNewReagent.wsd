@@ -1,0 +1,112 @@
+@startuml sequence
+participant "Main"
+participant ":ReagentDatabase"
+participant ":AutoDispenserSystem"
+participant ":RobotArm"
+participant ":Dispenser"
+participant "container1:Container"
+participant "container2:Container"
+participant "container3:Container"
+participant "mixture:Reagent"
+
+"Main" -> ":AutoDispenserSystem" : createNewReagent\n("phosphate-buffered saline", 1, 2)
+activate ":AutoDispenserSystem"
+
+":AutoDispenserSystem" -> "container1:Container" : setContent(reagent2)
+activate "container1:Container"
+deactivate "container1:Container"
+
+":AutoDispenserSystem" -> "container2:Container" : setContent(reagent3)
+activate "container2:Container"
+deactivate "container2:Container"
+
+":AutoDispenserSystem" -> ":RobotArm" : move(container1.position)
+activate ":RobotArm"
+":AutoDispenserSystem" <-- ":RobotArm" : sendFinishedSignal
+deactivate ":RobotArm"
+
+":AutoDispenserSystem" -> ":Dispenser" : aspirate(reagent2.getVolume())
+activate ":Dispenser"
+":Dispenser" -> "container1:Container" : container1.setState(BUSY)
+activate "container1:Container"
+deactivate "container1:Container"
+":AutoDispenserSystem" <-- ":Dispenser" : sendFinishedSignal
+":Dispenser" -> "container1:Container" : container1.setState(IDLE)
+activate "container1:Container"
+deactivate ":Dispenser"
+deactivate "container1:Container"
+
+":AutoDispenserSystem" -> ":RobotArm" : move(container3.position)
+activate ":RobotArm"
+":AutoDispenserSystem" <-- ":RobotArm" : sendFinishedSignal
+deactivate ":RobotArm"
+
+":AutoDispenserSystem" -> ":Dispenser" : dispense(container1.getVolume())
+activate ":Dispenser"
+":Dispenser" -> "container3:Container" : container3.set_state(BUSY)
+activate "container3:Container"
+deactivate "container3:Container"
+":AutoDispenserSystem" <-- ":Dispenser" : finished_signal
+":Dispenser" -> "container3:Container" : container3.setState(Idle)
+activate "container3:Container"
+deactivate ":Dispenser"
+deactivate "container3:Container"
+
+":AutoDispenserSystem" -> ":RobotArm" : move(container2.Position)
+activate ":RobotArm"
+":AutoDispenserSystem" <-- ":RobotArm" : sendFinishedSignal
+deactivate ":RobotArm"
+
+":AutoDispenserSystem" -> ":Dispenser" : aspirate(reagent3.getVolume())
+activate ":Dispenser"
+":Dispenser" -> "container2:Container" : container2.setState(BUSY)
+activate "container2:Container"
+deactivate "container2:Container"
+":AutoDispenserSystem" <-- ":Dispenser" : sendFinishedSignal
+":Dispenser" -> "container2:Container" : container2.setState(IDLE)
+activate "container2:Container"
+deactivate ":Dispenser"
+deactivate "container2:Container"
+
+":AutoDispenserSystem" -> ":RobotArm" : move(container3.position)
+activate ":RobotArm"
+":AutoDispenserSystem" <-- ":RobotArm" : sendFinishedSignal
+deactivate ":RobotArm"
+
+":AutoDispenserSystem" -> ":Dispenser" : dispense(reagent3.getVolume())
+activate ":Dispenser"
+":Dispenser" -> "container3:Container" : container3.setState(BUSY)
+activate "container3:Container"
+deactivate "container3:Container"
+":AutoDispenserSystem" <-- ":Dispenser" : sendFinishedSignal
+":Dispenser" -> "container3:Container" : container3.setState(IDLE)
+activate "container3:Container"
+deactivate ":Dispenser"
+deactivate "container3:Container"
+
+":AutoDispenserSystem" -> "mixture:Reagent" ** :new Reagent
+"mixture:Reagent" -> "mixture:Reagent" : init
+activate "mixture:Reagent"
+deactivate "mixture:Reagent"
+
+":AutoDispenserSystem" -> "container1:Container" : clear()
+activate "container1:Container"
+deactivate "container1:Container"
+":AutoDispenserSystem" -> "container2:Container" : clear()
+activate "container2:Container"
+deactivate "container2:Container"
+":AutoDispenserSystem" -> "container3:Container" : clear()
+activate "container3:Container"
+deactivate "container3:Container"
+
+":AutoDispenserSystem" -> ":ReagentDatabase" : addComponent(mixture)
+activate ":ReagentDatabase"
+deactivate ":ReagentDatabase"
+":AutoDispenserSystem" -> ":ReagentDatabase" : removeComponent(reagent2)
+activate ":ReagentDatabase"
+deactivate ":ReagentDatabase"
+":AutoDispenserSystem" -> ":ReagentDatabase" : removeComponent(reagent3)
+activate ":ReagentDatabase"
+deactivate ":ReagentDatabase"
+
+@enduml

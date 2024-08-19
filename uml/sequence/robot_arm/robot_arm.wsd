@@ -1,0 +1,31 @@
+@startuml sequence
+actor Operator
+participant ":AutoDispenserSystem"
+participant ":RobotArm"
+
+activate ":AutoDispenserSystem"
+":AutoDispenserSystem" -> ":RobotArm" : move(destination)
+activate ":RobotArm"
+":RobotArm" -> ":RobotArm" : currentState = MOVING\nupdate
+activate ":RobotArm"
+
+Operator -> ":AutoDispenserSystem" : Keyboard Input("s")
+":AutoDispenserSystem" -> ":AutoDispenserSystem" : handleInput("s")
+activate ":AutoDispenserSystem"
+":AutoDispenserSystem" -> ":RobotArm" : stop
+activate ":RobotArm"
+":RobotArm" -> ":RobotArm" : currentState = IDLE
+deactivate ":RobotArm"
+deactivate ":AutoDispenserSystem"
+
+Operator -> ":AutoDispenserSystem" : Keyboard Input("r")
+":AutoDispenserSystem" -> ":AutoDispenserSystem" : handleInput("r")
+activate ":AutoDispenserSystem"
+":AutoDispenserSystem" -> ":RobotArm" : resume
+activate ":RobotArm"
+":RobotArm" -> ":RobotArm" : currentState = MOVING
+deactivate ":RobotArm"
+deactivate ":AutoDispenserSystem"
+
+":AutoDispenserSystem" <-- ":RobotArm" : sendFinishedSignal
+@enduml

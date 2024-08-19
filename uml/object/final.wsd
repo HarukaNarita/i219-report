@@ -1,0 +1,62 @@
+@startuml objects
+object "reagentDatabase : ReagentDatabase" as db
+
+object "reagent1 : RawMaterial" as r1
+r1 : name = "500 mM magnesium chloride"
+r1 : volume = 30
+
+object "reagent2 : RawMaterial" as r2
+r2 : name = "100 mM sodium chloride"
+r2 : volume = 50
+
+object "reagent3 : RawMaterial" as r3
+r3 : name = "phosphate buffer"
+r3 : volume = 100
+        
+object "reagent4 : RawMaterial" as r4
+r4 : name = "double distilled water"
+r4 : volume = 200
+
+object "reagent5 : Reagent" as r5
+r5 : name = "phosphate-buffered saline"
+r5 : volume = 150
+r5 : itemList = [reagent2, reagent3]
+
+db o-d- r1
+db o-d- r4
+db o-d- r5
+r5 o-d- r2
+r5 o-d- r3
+
+object ": AutoDispenserSystem" as ads
+
+object "container1 : Container" as c1
+c1 : id = 1
+c1 : position = 10
+c1 : content = null
+
+object "container2 : Container" as c2
+c2 : id = 2
+c2 : position = 20
+c2 : content = null
+
+object "container3 : Container" as c3
+c3 : id = 3
+c3 : position = 30
+c3 : content = reagent5
+
+c3 -u- r5 : content
+
+ads o-r- db
+ads o-u- c1
+ads o-u- c2
+ads o-u- c3
+
+object ":RobotArm" as ra
+object ":Dispenser" as d
+
+ads o-d- ra
+ads o-d- d
+
+
+@enduml

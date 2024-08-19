@@ -1,0 +1,29 @@
+@startuml dispenser
+[*] --> Idle
+state Working {
+    Idle-> [H] : resume
+    Idle: do/ sleep
+    state Aspirating {
+    }
+
+    state Dispensing {
+    }
+}
+Working: entry / setContainerState(BUSY)
+Aspirating: entry / pFinal = min(volume/10, pMax), \n pDirection = UP
+Aspirating: do / pTmp ++
+
+Dispensing: entry / pFinal = max(volume/10, pMin), \n pDirection = DOWN
+Dispensing: do / pTmp --
+
+Working -> Idle : stop
+Idle ---> Aspirating : aspirate [pTmp < pMax]
+Idle ---> Dispensing : dispense [pTmp > pMin]
+
+state Finished {
+}
+Finished: entry / pDirection = null,\npFinal=0
+
+Working -d-> Finished : [pTmp == pFinal] \n / sendFinishedSignal()
+Finished --u-> Idle
+@enduml

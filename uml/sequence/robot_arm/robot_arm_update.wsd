@@ -1,0 +1,19 @@
+@startuml sequence
+participant ":RobotArm"
+
+":RobotArm" -> ":RobotArm" : update
+activate ":RobotArm"
+loop
+    alt currentState == IDLE
+        ":RobotArm" -> ":RobotArm" : sleep
+    else currentState == MOVING
+        alt position < destination
+            ":RobotArm" -> ":RobotArm" : position ++
+        else position > destination
+            ":RobotArm" -> ":RobotArm" : position --
+        end
+    else currentState == FINISHED
+        ":RobotArm" -> ":RobotArm" : currentState = IDLE
+    end
+end
+@enduml

@@ -1,0 +1,19 @@
+@startuml sequence
+participant ":Dispenser"
+
+":Dispenser" -> ":Dispenser" : update
+activate ":Dispenser"
+loop
+    alt currentState == IDLE
+        ":Dispenser" -> ":Dispenser" : sleep
+    else currentState == WORKING
+        alt workingState == ASPIRATING
+            ":Dispenser" -> ":Dispenser" : pTmp ++
+        else workingState == DISPENSING
+            ":Dispenser" -> ":Dispenser" : pTmp --
+        end
+    else currentState == FINISHED
+        ":Dispenser" -> ":Dispenser" : currentState = IDLE
+    end
+end
+@enduml

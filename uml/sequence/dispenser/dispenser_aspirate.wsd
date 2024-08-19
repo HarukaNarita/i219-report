@@ -1,0 +1,31 @@
+@startuml sequence
+actor Operator
+participant ":AutoDispenserSystem"
+participant ":Dispenser"
+
+activate ":AutoDispenserSystem"
+":AutoDispenserSystem" -> ":Dispenser" : aspirate()
+activate ":Dispenser"
+":Dispenser" -> ":Dispenser" : currentState = WORKING\nworkingState = ASPIRATING\npDirection = UP\nupdate
+activate ":Dispenser"
+
+Operator -> ":AutoDispenserSystem" : Keyboard Input("s")
+":AutoDispenserSystem" -> ":AutoDispenserSystem" : handleInput("s")
+activate ":AutoDispenserSystem"
+":AutoDispenserSystem" -> ":Dispenser" : stop
+activate ":Dispenser"
+":Dispenser" -> ":Dispenser" : currentState = IDLE\nworkingState = null
+deactivate ":Dispenser"
+deactivate ":AutoDispenserSystem"
+
+Operator -> ":AutoDispenserSystem" : Keyboard Input("r")
+":AutoDispenserSystem" -> ":AutoDispenserSystem" : handleInput("r")
+activate ":AutoDispenserSystem"
+":AutoDispenserSystem" -> ":Dispenser" : resume
+activate ":Dispenser"
+":Dispenser" -> ":Dispenser" : currentState = WORKING, \nworkingState = ASPIRATING
+deactivate ":Dispenser"
+deactivate ":AutoDispenserSystem"
+
+":AutoDispenserSystem" <-- ":Dispenser" : sendFinishedSignal
+@enduml

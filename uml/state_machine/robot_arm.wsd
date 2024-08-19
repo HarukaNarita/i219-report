@@ -1,0 +1,11 @@
+@startuml dispenser
+[*] --> Idle
+Idle -d-> Moving : move(destination)
+Idle -d-> Moving : resume
+Idle: do / sleep
+Moving --> Idle : stop
+Moving : do / position ++ [position < destination],\n position -- [position > destination]
+Moving -d-> Finished : [position == destination]\n/sendFinishedSignal()
+Finished --d--> Idle
+Finished: entry/ destination = 0
+@enduml
